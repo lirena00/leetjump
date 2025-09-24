@@ -21,9 +21,5 @@ export default defineConfig({
         description: 'Activate the extension',
       },
     },
-    content_security_policy: {
-      extension_pages:
-        "script-src 'self'; object-src 'self'; style-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com;",
-    },
   },
 });

@@ -1,34 +1,198 @@
-import { useState } from "react";
-import reactLogo from "@/assets/react.svg";
-import wxtLogo from "/wxt.svg";
-import "./App.css";
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { LeetCodeProblem } from '@/utils/database';
+
+import Header from '@/components/Header';
+import SearchInput from '@/components/SearchInput';
+import ResultsList from '@/components/ResultsList';
+import Footer from '@/components/Footer';
+interface SearchResult extends LeetCodeProblem {
+  matchType?: 'id' | 'title' | 'tag';
+}
 
 function App() {
-  const [count, setCount] = useState(0);
+  const [query, setQuery] = useState('');
+  const [results, setResults] = useState<SearchResult[]>([]);
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
+  const [syncStatus, setSyncStatus] = useState<{
+    isStale: boolean;
+    lastSync: Date | null;
+    totalCount: number;
+  } | null>(null);
+
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  // Focus input on mount
+  useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, []);
+
+  // Load sync status on mount
+  useEffect(() => {
+    const loadSyncStatus = async () => {
+      try {
+        const response = await browser.runtime.sendMessage({
+          type: 'CHECK_SYNC_STATUS',
+        });
+
+        if (response.success) {
+          setSyncStatus({
+            isStale: response.data.isStale,
+            lastSync: response.data.lastSync ? new Date(response.data.lastSync) : null,
+            totalCount: response.data.totalCount,
+          });
+        }
+      } catch (error) {
+        console.error('Failed to load sync status:', error);
+      }
+    };
+
+    loadSyncStatus();
+  }, []);
+
+  // Search function with debouncing
+  const performSearch = useCallback(async (searchQuery: string) => {
+    if (!searchQuery.trim()) {
+      setResults([]);
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      const response = await browser.runtime.sendMessage({
+        type: 'SEARCH_PROBLEMS',
+        query: searchQuery,
+      });
+
+      console.log('Search response:', response);
+
+      if (response && response.success) {
+        const enhancedResults = response.data.map((problem: LeetCodeProblem) => {
+          // Determine match type for better UX
+          const lowerQuery = searchQuery.toLowerCase();
+          let matchType: 'id' | 'title' | 'tag' = 'title';
+
+          if (problem.id.toString() === searchQuery) {
+            matchType = 'id';
+          } else if (problem.topicTags.some(tag => tag.toLowerCase().includes(lowerQuery))) {
+            matchType = 'tag';
+          }
+
+          return { ...problem, matchType };
+        });
+
+        setResults(enhancedResults);
+        setSelectedIndex(0);
+      } else {
+        console.warn('Search failed:', response?.error || 'Unknown error');
+        setResults([]);
+      }
+    } catch (error) {
+      console.error('Search failed:', error);
+      setResults([]);
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+  // Debounced search effect
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      performSearch(query);
+    }, 150);
+
+    return () => clearTimeout(timer);
+  }, [query, performSearch]);
+
+  // Handle keyboard navigation
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent) => {
+      switch (e.key) {
+        case 'ArrowDown':
+          e.preventDefault();
+          setSelectedIndex(prev => Math.min(prev + 1, results.length - 1));
+          break;
+
+        case 'ArrowUp':
+          e.preventDefault();
+          setSelectedIndex(prev => Math.max(prev - 1, 0));
+          break;
+
+        case 'Enter':
+          e.preventDefault();
+          if (results[selectedIndex]) {
+            openProblem(results[selectedIndex]);
+          }
+          break;
+      }
+    },
+    [results, selectedIndex]
+  );
+
+  // Open problem in new tab
+  const openProblem = async (problem: LeetCodeProblem) => {
+    try {
+      await browser.runtime.sendMessage({
+        type: 'OPEN_PROBLEM',
+        slug: problem.slug,
+      });
+    } catch (error) {
+      console.error('Failed to open problem:', error);
+    }
+  };
+
+  // Sync problems
+  const handleSync = async () => {
+    setIsLoading(true);
+    try {
+      await browser.runtime.sendMessage({
+        type: 'SYNC_PROBLEMS',
+      });
+
+      // Refresh sync status
+      const response = await browser.runtime.sendMessage({
+        type: 'CHECK_SYNC_STATUS',
+      });
+
+      if (response.success) {
+        setSyncStatus({
+          isStale: response.data.isStale,
+          lastSync: response.data.lastSync ? new Date(response.data.lastSync) : null,
+          totalCount: response.data.totalCount,
+        });
+      }
+    } catch (error) {
+      console.error('Sync failed:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
-    <>
-      <div>
-        <a href="https://wxt.dev" target="_blank">
-          <img src={wxtLogo} className="logo" alt="WXT logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>WXT + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the WXT and React logos to learn more
-      </p>
-    </>
+    <div className="w-full h-screen bg-[var(--background)] overflow-hidden font-[var(--font-sans)] flex flex-col">
+      <Header syncStatus={syncStatus} isLoading={isLoading} onSync={handleSync} />
+
+      <SearchInput
+        query={query}
+        isLoading={isLoading}
+        inputRef={inputRef}
+        onQueryChange={setQuery}
+        onKeyDown={handleKeyDown}
+      />
+
+      <ResultsList
+        results={results}
+        query={query}
+        isLoading={isLoading}
+        selectedIndex={selectedIndex}
+        onOpenProblem={openProblem}
+      />
+
+      <Footer />
+    </div>
   );
 }
 
