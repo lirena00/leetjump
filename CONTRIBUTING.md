@@ -1,6 +1,6 @@
-# Contributing to LeetCode Lookup
+# Contributing to LeetJump
 
-We love your input! We want to make contributing to LeetCode Lookup as easy and
+We love your input! We want to make contributing to LeetJump as easy and
 transparent as possible, whether it's:
 
 - Reporting a bug
@@ -380,4 +380,4 @@ MIT License.
 
 ---
 
-Thank you for contributing to LeetCode Lookup! 🚀
+Thank you for contributing to LeetJump! 🚀

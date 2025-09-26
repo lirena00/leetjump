@@ -20,8 +20,8 @@ export default function Header({ syncStatus, isLoading, onSync }: HeaderProps) {
           <img src="./icon/128.png" alt="LeetJump" className="w-8 h-8" />
 
           <div>
-            <h1 className="text-sm font-semibold text-[var(--foreground)]">LeetCode Lookup</h1>
-            <p className="text-xs text-[var(--muted-foreground)]">Quick problem navigation</p>
+            <h1 className="text-sm font-semibold text-[var(--foreground)]">LeetJump</h1>
+            <p className="text-xs text-[var(--muted-foreground)]">Quick Leetcode Navigation</p>
           </div>
         </div>
 

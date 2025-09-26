@@ -14,7 +14,7 @@ export default defineBackground(() => {
           browser.notifications.create({
             type: 'basic',
             iconUrl: '/icon/48.png',
-            title: 'LeetCode Lookup',
+            title: 'LeetJump',
             message: 'Syncing LeetCode problems... This may take a few minutes.',
           });
         }
@@ -29,7 +29,7 @@ export default defineBackground(() => {
           browser.notifications.create({
             type: 'basic',
             iconUrl: '/icon/48.png',
-            title: 'LeetCode Lookup',
+            title: 'LeetJump',
             message: 'Setup complete! Press Alt+M to start searching.',
           });
         }
@@ -40,7 +40,7 @@ export default defineBackground(() => {
           browser.notifications.create({
             type: 'basic',
             iconUrl: '/icon/48.png',
-            title: 'LeetCode Lookup - Error',
+            title: 'LeetJump - Error',
             message: 'Failed to sync problems. You can try again later from the extension popup.',
           });
         }
