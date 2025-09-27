@@ -40,7 +40,7 @@ Visit the Chrome Web Store page (link coming soon) and click "Add to Chrome".
 #### Manual Installation (Development)
 
 1. Download the latest release from
-   [GitHub Releases](https://github.com/lirena00/leetcode-lookup/releases)
+   [GitHub Releases](https://github.com/lirena00/leetjump/releases)
 2. Open Chrome and navigate to `chrome://extensions/`
 3. Enable "Developer mode" in the top right
 4. Click "Load unpacked" and select the downloaded folder
@@ -52,7 +52,6 @@ Visit the Chrome Web Store page (link coming soon) and click "Add to Chrome".
 2. **Search**: Type to search problems:
    - By number: `"1"` → Two Sum
    - By title: `"binary"` → All binary search problems
-   - By topic: `"array"` → All array problems
 3. **Navigate**: Use ↑↓ arrow keys to navigate results
 4. **Open**: Press Enter or click to open the problem in a new tab
 5. **Close**: Press Escape or click outside the popup
@@ -69,8 +68,8 @@ Visit the Chrome Web Store page (link coming soon) and click "Add to Chrome".
 
 ```bash
 # Clone the repository
-git clone https://github.com/lirena00/leetcode-lookup.git
-cd leetcode-lookup
+git clone https://github.com/lirena00/leetjump.git
+cd leetjump
 
 # Install dependencies
 bun install
@@ -87,21 +86,12 @@ The extension will auto-reload as you make changes!
 # Development
 bun dev                  # Start development mode with auto-reload
 bun run build           # Build for production
-
-# Build for specific browsers
-bun run build --target chrome-mv3
-bun run build --target firefox-mv2
-bun run build --target edge-mv3
-
-# Quality assurance
-bun run typecheck      # Type checking with TypeScript
-bun run clean          # Clean build artifacts
 ```
 
 ### Project Structure
 
 ```
-leetcode-lookup/
+leetjump/
 ├── entrypoints/
 │   ├── background.ts           # Background script - handles API & shortcuts
 │   ├── content.ts              # Content script - injects popup UI
@@ -159,12 +149,6 @@ leetcode-lookup/
   - Manages data syncing and caching
   - Processes keyboard shortcuts
   - Manages extension lifecycle and alarms
-
-- **Content Script (`content.ts`)**:
-
-  - Injects UI into web pages using Shadow DOM
-  - Handles keyboard event listening
-  - Manages popup visibility and positioning
 
 - **React Components**:
 
@@ -296,7 +280,7 @@ for details.
 Enable debug logging by opening browser console and typing:
 
 ```javascript
-localStorage.setItem('leetcode-lookup-debug', 'true');
+localStorage.setItem('leetjump-debug', 'true');
 ```
 
 Then reload the page and check console for detailed logs.
@@ -311,12 +295,11 @@ Then reload the page and check console for detailed logs.
 
 ### Support
 
-- **Bug Reports**:
-  [GitHub Issues](https://github.com/lirena00/leetcode-lookup/issues)
+- **Bug Reports**: [GitHub Issues](https://github.com/lirena00/leetjump/issues)
 - **Feature Requests**:
-  [GitHub Issues](https://github.com/lirena00/leetcode-lookup/issues)
+  [GitHub Issues](https://github.com/lirena00/leetjump/issues)
 - **Discussions**:
-  [GitHub Discussions](https://github.com/lirena00/leetcode-lookup/discussions)
+  [GitHub Discussions](https://github.com/lirena00/leetjump/discussions)
 
 ## License
 

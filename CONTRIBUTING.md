@@ -37,8 +37,8 @@ welcome your pull requests:
 
 ```bash
 # Fork and clone the repository
-git clone https://github.com/lirena00/leetcode-lookup.git
-cd leetcode-lookup
+git clone https://github.com/lirena00/leetjump.git
+cd leetjump
 
 # Install dependencies
 bun install
@@ -174,7 +174,7 @@ Test the extension with:
 ## Reporting Bugs
 
 We use GitHub issues to track public bugs. Report a bug by
-[opening a new issue](https://github.com/lirena00/leetcode-lookup/issues/new?template=bug_report.md).
+[opening a new issue](https://github.com/lirena00/leetjump/issues/new?template=bug_report.md).
 
 ### Bug Report Guidelines
 
@@ -192,7 +192,7 @@ We use GitHub issues to track public bugs. Report a bug by
 ## Feature Requests
 
 We use GitHub issues to track feature requests. Request a feature by
-[opening a new issue](https://github.com/lirena00/leetcode-lookup/issues/new?template=feature_request.md).
+[opening a new issue](https://github.com/lirena00/leetjump/issues/new?template=feature_request.md).
 
 ### Feature Ideas
 
@@ -210,7 +210,7 @@ Some areas for potential improvement:
 ### File Organization
 
 ```
-leetcode-lookup/
+leetjump/
 ├── entrypoints/          # Extension entry points
 │   ├── background.ts     # Background script (API calls, alarms)
 │   ├── content.ts        # Content script (popup injection)
@@ -368,8 +368,7 @@ uphold this code.
 ## Getting Help
 
 - **Documentation**: Check the README and code comments
-- **Issues**:
-  [GitHub Issues](https://github.com/yourusername/leetcode-lookup/issues)
+- **Issues**: [GitHub Issues](https://github.com/yourusername/leetjump/issues)
 - **WXT Documentation**: [WXT Framework Docs](https://wxt.dev/)
 - **React Documentation**: [React Docs](https://react.dev/)
 

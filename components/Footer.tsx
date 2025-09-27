@@ -31,7 +31,7 @@ export default function Footer() {
       <div className="flex justify-between items-center text-xs text-[var(--muted-foreground)] mt-2 pt-2 border-t border-[var(--border)]">
         <div className="flex items-center gap-3 border-separate">
           <a
-            href="https://github.com/lirena00/leetcode-lookup"
+            href="https://github.com/lirena00/leetjump"
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-1 hover:text-[var(--foreground)] transition-colors"
