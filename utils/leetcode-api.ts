@@ -61,8 +61,6 @@ class LeetCodeService {
       slug: item.stat.question__title_slug,
       difficulty: this.mapDifficulty(item.difficulty.level),
       isPaidOnly: item.paid_only,
-      topicTags: [], // This API doesn't include topic tags
-      companyTags: [],
       acRate:
         item.stat.total_acs && item.stat.total_submitted
           ? (item.stat.total_acs / item.stat.total_submitted) * 100
@@ -92,8 +90,6 @@ class LeetCodeService {
         slug: 'two-sum',
         difficulty: 'Easy',
         isPaidOnly: false,
-        topicTags: ['Array', 'Hash Table'],
-        companyTags: ['Amazon', 'Google', 'Microsoft'],
         acRate: 49.2,
         status: null,
       },

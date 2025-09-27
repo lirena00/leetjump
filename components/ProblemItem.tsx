@@ -56,24 +56,6 @@ const ProblemItem = forwardRef<HTMLDivElement, ProblemItemProps>(
               <div className="font-medium text-[var(--foreground)] text-sm mb-0.5 truncate">
                 {problem.title}
               </div>
-
-              {problem.topicTags.length > 0 && (
-                <div className="flex flex-wrap gap-1">
-                  {problem.topicTags.slice(0, 2).map((tag, tagIndex) => (
-                    <span
-                      key={tagIndex}
-                      className="text-xs text-[var(--muted-foreground)] bg-[var(--muted)] px-1.5 py-0.5 rounded-[var(--radius-md)]"
-                    >
-                      {tag}
-                    </span>
-                  ))}
-                  {problem.topicTags.length > 2 && (
-                    <span className="text-xs text-[var(--muted-foreground)]">
-                      +{problem.topicTags.length - 2}
-                    </span>
-                  )}
-                </div>
-              )}
             </div>
           </div>
 

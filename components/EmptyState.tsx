@@ -9,7 +9,7 @@ export default function EmptyState({ hasQuery, isLoading }: EmptyStateProps) {
       <div className="px-4 py-12 text-center">
         <div className="text-sm font-medium text-[var(--foreground)] mb-1">No problems found</div>
         <div className="text-xs text-[var(--muted-foreground)]">
-          Try searching by number, title, or tag
+          Try searching by number or title
         </div>
       </div>
     );

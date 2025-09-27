@@ -6,8 +6,6 @@ export interface LeetCodeProblem {
   slug: string;
   difficulty: 'Easy' | 'Medium' | 'Hard';
   isPaidOnly: boolean;
-  topicTags: string[];
-  companyTags: string[];
   acRate: number;
   status?: 'ac' | 'notac' | null;
 }
@@ -86,8 +84,7 @@ class LeetCodeDatabase {
         problem =>
           problem.title.toLowerCase().includes(lowerQuery) ||
           problem.id.toString().includes(query) ||
-          problem.slug.toLowerCase().includes(lowerQuery) ||
-          problem.topicTags.some(tag => tag.toLowerCase().includes(lowerQuery))
+          problem.slug.toLowerCase().includes(lowerQuery)
       )
       .slice(0, limit);
   }

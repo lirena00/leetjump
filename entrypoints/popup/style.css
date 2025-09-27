@@ -29,7 +29,6 @@ body {
   max-height: 800px;
 }
 
-/* Theme CSS variables matching provided design system */
 :root {
   --background: oklch(0.9761 0.0041 91.4461);
   --foreground: oklch(0.2264 0 0);
@@ -79,54 +78,6 @@ body {
   --spacing: 0.25rem;
 }
 
-.dark {
-  --background: oklch(0.1408 0.0044 285.8229);
-  --foreground: oklch(0.9851 0 0);
-  --card: oklch(0.1408 0.0044 285.8229);
-  --card-foreground: oklch(0.9851 0 0);
-  --popover: oklch(0.1408 0.0044 285.8229);
-  --popover-foreground: oklch(0.9851 0 0);
-  --primary: oklch(0.9851 0 0);
-  --primary-foreground: oklch(0.1408 0.0044 285.8229);
-  --secondary: oklch(0.2739 0.0055 286.0326);
-  --secondary-foreground: oklch(0.9851 0 0);
-  --muted: oklch(0.2739 0.0055 286.0326);
-  --muted-foreground: oklch(0.7118 0.0129 286.0665);
-  --accent: oklch(0.2739 0.0055 286.0326);
-  --accent-foreground: oklch(0.9851 0 0);
-  --destructive: oklch(0.3958 0.1331 25.723);
-  --destructive-foreground: oklch(0.9851 0 0);
-  --border: oklch(0.2739 0.0055 286.0326);
-  --input: oklch(0.2739 0.0055 286.0326);
-  --ring: oklch(0.7118 0.0129 286.0665);
-  --chart-1: oklch(0.7137 0.1434 254.624);
-  --chart-2: oklch(0.709 0.1592 293.5412);
-  --chart-3: oklch(0.8003 0.1821 151.711);
-  --chart-4: oklch(0.8606 0.1731 91.9357);
-  --chart-5: oklch(0.7576 0.159 55.9344);
-  --sidebar: oklch(0.1408 0.0044 285.8229);
-  --sidebar-foreground: oklch(0.9851 0 0);
-  --sidebar-primary: oklch(0.9851 0 0);
-  --sidebar-primary-foreground: oklch(0.1408 0.0044 285.8229);
-  --sidebar-accent: oklch(0.2739 0.0055 286.0326);
-  --sidebar-accent-foreground: oklch(0.9851 0 0);
-  --sidebar-border: oklch(0.2739 0.0055 286.0326);
-  --sidebar-ring: oklch(0.7118 0.0129 286.0665);
-  --font-sans: JetBrains Mono, ui-monospace, monospace;
-  --font-serif: serif;
-  --font-mono: monospace;
-  --radius: 0rem;
-  --shadow-2xs: -50px -50px 0px -50px hsl(0 0% 0% / 0);
-  --shadow-xs: -50px -50px 0px -50px hsl(0 0% 0% / 0);
-  --shadow-sm: -50px -50px 0px -50px hsl(0 0% 0% / 0), -50px 1px 2px -51px hsl(0 0% 0% / 0);
-  --shadow: -50px -50px 0px -50px hsl(0 0% 0% / 0), -50px 1px 2px -51px hsl(0 0% 0% / 0);
-  --shadow-md: -50px -50px 0px -50px hsl(0 0% 0% / 0), -50px 2px 4px -51px hsl(0 0% 0% / 0);
-  --shadow-lg: -50px -50px 0px -50px hsl(0 0% 0% / 0), -50px 4px 6px -51px hsl(0 0% 0% / 0);
-  --shadow-xl: -50px -50px 0px -50px hsl(0 0% 0% / 0), -50px 8px 10px -51px hsl(0 0% 0% / 0);
-  --shadow-2xl: -50px -50px 0px -50px hsl(0 0% 0% / 0);
-}
-
-/* Computed CSS properties for theme compatibility */
 :root {
   --color-background: var(--background);
   --color-foreground: var(--foreground);

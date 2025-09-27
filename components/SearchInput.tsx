@@ -28,7 +28,7 @@ export default function SearchInput({
           value={query}
           onChange={e => onQueryChange(e.target.value)}
           onKeyDown={onKeyDown}
-          placeholder="Search by number, title, or tags..."
+          placeholder="Search by number or title ..."
           className="w-full pl-10 pr-10 py-2 text-sm bg-[var(--muted)] border-0 rounded-[var(--radius-md)] focus:outline-none focus:bg-[var(--background)] focus:ring-1 focus:ring-[var(--ring)] transition-all placeholder:text-[var(--muted-foreground)]"
         />
         {isLoading && (
