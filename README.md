@@ -3,12 +3,10 @@
 [![MIT License](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=flat&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![React](https://img.shields.io/badge/React-20232A?style=flat&logo=react&logoColor=61DAFB)](https://reactjs.org/)
-[![WXT](https://img.shields.io/badge/WXT-FF6B35?style=flat&logo=webextension&logoColor=white)](https://wxt.dev/)
+[![WXT](https://img.shields.io/badge/WXT-67d55e?style=flat&logo=webextension&logoColor=white)](https://wxt.dev/)
 [![Bun](https://img.shields.io/badge/Bun-000000?style=flat&logo=bun&logoColor=white)](https://bun.sh/)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=flat&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
 
-> **Quick navigation to LeetCode problems with keyboard shortcuts - like Raycast
-> for coding interviews**
+> **Quick navigation to LeetCode problems with keyboard shortcuts**
 
 A powerful browser extension that provides instant access to LeetCode problems
 through a beautiful, keyboard-driven interface. Never lose momentum during your
@@ -16,18 +14,14 @@ coding practice again!
 
 ## Features
 
-- **Instant Search**: Search 3000+ LeetCode problems by number, title, or topic
-  tags
-- **Keyboard Shortcuts**: `Alt+M` to open anywhere on any website
-- **Smart Matching**: Find problems by ID (e.g., "1"), partial titles, or topic
-  tags
+- **Instant Search**: Search 3000+ LeetCode problems by number, title.
+- **Keyboard Shortcuts**: `Alt+L` to open anywhere on any website
+- **Smart Matching**: Find problems by ID (e.g., "1"), partial titles
 - **Modern UI**: Clean, minimal interface that doesn't interfere with your
   workflow
 - **Offline Ready**: Problems cached locally for lightning-fast searches
 - **Auto-sync**: Automatically keeps problem database up-to-date
-- **Rich Metadata**: Difficulty levels, premium status, topic tags, and
-  acceptance rates
-- **Universal**: Works on any website - practice anywhere, anytime
+- **Rich Metadata**: Difficulty levels, premium status, and acceptance rates
 
 ## Quick Start
 
@@ -48,7 +42,7 @@ Visit the Chrome Web Store page (link coming soon) and click "Add to Chrome".
 
 ### Usage
 
-1. **Open the lookup**: Press `Alt+M` on any webpage
+1. **Open the lookup**: Press `Alt+L` on any webpage
 2. **Search**: Type to search problems:
    - By number: `"1"` → Two Sum
    - By title: `"binary"` → All binary search problems
@@ -86,37 +80,6 @@ The extension will auto-reload as you make changes!
 # Development
 bun dev                  # Start development mode with auto-reload
 bun run build           # Build for production
-```
-
-### Project Structure
-
-```
-leetjump/
-├── entrypoints/
-│   ├── background.ts           # Background script - handles API & shortcuts
-│   ├── content.ts              # Content script - injects popup UI
-│   └── popup/                  # Browser action popup (optional)
-│       ├── App.tsx            # Main popup component
-│       ├── main.tsx           # React entry point
-│       ├── index.html         # Popup HTML
-│       └── style.css          # Popup styles
-├── components/
-│   ├── Header.tsx             # Popup header component
-│   ├── SearchInput.tsx        # Search input component
-│   ├── ResultsList.tsx        # Search results list
-│   ├── ProblemItem.tsx        # Individual problem item
-│   ├── Footer.tsx             # Popup footer
-│   ├── EmptyState.tsx         # Empty state component
-│   └── icons/                 # Icon components
-├── utils/
-│   ├── database.ts            # IndexedDB wrapper for local storage
-│   └── leetcode-api.ts        # LeetCode API service
-├── public/
-│   └── icon/                  # Extension icons
-├── wxt.config.ts              # WXT framework configuration
-├── tsconfig.json              # TypeScript configuration
-├── postcss.config.mjs         # PostCSS configuration
-└── package.json
 ```
 
 ### Key Technologies
@@ -185,8 +148,6 @@ interface LeetCodeProblem {
   slug: string;
   difficulty: 'Easy' | 'Medium' | 'Hard';
   isPaidOnly: boolean;
-  topicTags: string[];
-  companyTags: string[];
   acRate: number;
   status?: 'ac' | 'notac' | null;
 }
@@ -221,14 +182,6 @@ for details.
 - Fuzzy search with intelligent scoring
 - Search by company tags
 - Advanced filtering by difficulty/status/tags
-- Search history and suggestions
-
-### UI Improvements
-
-- Dark mode support with system preference detection
-- Customizable themes and color schemes
-- Keyboard shortcut customization
-- Improved accessibility features
 
 ### Data Features
 
@@ -241,57 +194,9 @@ for details.
 
 - Problem recommendations based on solving patterns
 - Integration with other coding platforms
-- Study plan integration and progress tracking
 - Performance analytics and statistics
 
-## Troubleshooting
-
-### Common Issues
-
-**Extension doesn't respond to Alt+M**
-
-- Ensure you're not focused in an input field when pressing the shortcut
-- Check if another extension is using the same shortcut
-- Try refreshing the page and testing again
-- Verify the extension is enabled in your browser settings
-
-**No problems showing up in search**
-
-- Check the browser console for errors (F12 → Console)
-- Wait for initial sync to complete (may take a few minutes on first install)
-- Try reloading the extension from the browser's extension management page
-
-**Popup doesn't appear or appears incorrectly**
-
-- Disable other extensions temporarily to check for conflicts
-- Clear browser cache and reload the current page
-- Check if the website has strict Content Security Policy restrictions
-- Ensure JavaScript is enabled for the current website
-
-**Performance issues or slow search**
-
-- Clear extension storage: Browser Settings → Privacy → Clear browsing data →
-  Extensions
-- Restart your browser to free up memory
-- Check available disk space for IndexedDB storage
-
-### Debugging
-
-Enable debug logging by opening browser console and typing:
-
-```javascript
-localStorage.setItem('leetjump-debug', 'true');
-```
-
 Then reload the page and check console for detailed logs.
-
-### Browser Compatibility
-
-- **Chrome**: Full support (Manifest V3)
-- **Firefox**: Full support (Manifest V2)
-- **Edge**: Full support (Manifest V3)
-- **Safari**: Planned support
-- **Opera**: Should work (Chromium-based)
 
 ### Support
 
@@ -306,17 +211,6 @@ Then reload the page and check console for detailed logs.
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 for details.
 
-## Acknowledgments
-
-- [LeetCode](https://leetcode.com/) for providing the excellent platform and API
-  access
-- [WXT Framework](https://wxt.dev/) for making browser extension development
-  enjoyable
-- [Bun](https://bun.sh/) for fast and reliable JavaScript tooling
-- The open-source community for inspiration and continuous improvement
-
 ---
 
 **Star this repository if you find it useful!**
-
-Made with care for the coding interview community.
