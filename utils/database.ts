@@ -16,8 +16,6 @@ interface LeetCodeDB extends DBSchema {
     value: LeetCodeProblem;
     indexes: {
       'by-slug': string;
-      'by-difficulty': string;
-      'by-title': string;
     };
   };
   metadata: {
@@ -45,8 +43,7 @@ class LeetCodeDatabase {
           keyPath: 'id',
         });
         problemStore.createIndex('by-slug', 'slug', { unique: true });
-        problemStore.createIndex('by-difficulty', 'difficulty');
-        problemStore.createIndex('by-title', 'title');
+        // Removed unused indexes for better performance
 
         // Create metadata store
         db.createObjectStore('metadata', {
@@ -74,9 +71,6 @@ class LeetCodeDatabase {
   async searchProblems(query: string, limit = 50): Promise<LeetCodeProblem[]> {
     await this.init();
     const all = await this.getAllProblems();
-
-    if (!query) return all.slice(0, limit);
-
     const lowerQuery = query.toLowerCase();
 
     return all
@@ -92,7 +86,6 @@ class LeetCodeDatabase {
   async saveProblems(problems: LeetCodeProblem[]): Promise<void> {
     await this.init();
     const tx = this.db!.transaction('problems', 'readwrite');
-
     await Promise.all([...problems.map(problem => tx.store.put(problem)), tx.done]);
   }
 

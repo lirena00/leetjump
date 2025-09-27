@@ -4,7 +4,7 @@ import ProblemItem from './ProblemItem';
 import EmptyState from './EmptyState';
 
 interface SearchResult extends LeetCodeProblem {
-  matchType?: 'id' | 'title' | 'tag';
+  matchType?: 'id' | 'title' | 'slug';
 }
 
 interface ResultsListProps {

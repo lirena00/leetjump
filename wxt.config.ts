@@ -12,11 +12,11 @@ export default defineConfig({
     commands: {
       _execute_action: {
         suggested_key: {
-          default: 'Alt+M',
-          mac: 'Alt+M',
-          windows: 'Alt+M',
-          chromeos: 'Alt+M',
-          linux: 'Alt+M',
+          default: 'Alt+L',
+          mac: 'Alt+L',
+          windows: 'Alt+L',
+          chromeos: 'Alt+L',
+          linux: 'Alt+L',
         },
         description: 'Activate the extension',
       },

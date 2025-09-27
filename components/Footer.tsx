@@ -62,7 +62,15 @@ export default function Footer() {
         <div className="flex items-center gap-1">
           <span>Made with</span>
           <Heart className="w-3 h-3 text-red-500" />
-          <span>by lirena00</span>
+          <span>by</span>
+          <a
+            href="https://www.lirena.in"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline decoration-dotted hover:text-[var(--foreground)] transition-colors"
+          >
+            lirena00
+          </a>
         </div>
       </div>
     </div>

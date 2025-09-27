@@ -2,12 +2,8 @@ import { forwardRef } from 'react';
 import { ExternalLink } from 'lucide-react';
 import { LeetCodeProblem } from '@/utils/database';
 
-interface SearchResult extends LeetCodeProblem {
-  matchType?: 'id' | 'title' | 'tag';
-}
-
 interface ProblemItemProps {
-  problem: SearchResult;
+  problem: LeetCodeProblem & { matchType?: 'id' | 'title' | 'slug' };
   index: number;
   selectedIndex: number;
   onOpen: (problem: LeetCodeProblem) => void;
@@ -16,27 +12,25 @@ interface ProblemItemProps {
 const ProblemItem = forwardRef<HTMLDivElement, ProblemItemProps>(
   ({ problem, index, selectedIndex, onOpen }, ref) => {
     const getDifficultyDot = (difficulty: string) => {
-      switch (difficulty.toLowerCase()) {
-        case 'easy':
-          return 'difficulty-easy';
-        case 'medium':
-          return 'difficulty-medium';
-        case 'hard':
-          return 'difficulty-hard';
-        default:
-          return 'difficulty-medium';
-      }
+      const diffMap = {
+        easy: 'difficulty-easy',
+        medium: 'difficulty-medium',
+        hard: 'difficulty-hard',
+      } as const;
+      return diffMap[difficulty.toLowerCase() as keyof typeof diffMap] || 'difficulty-medium';
     };
 
     const getDifficultyText = (difficulty: string) => {
       return difficulty.charAt(0).toUpperCase() + difficulty.slice(1).toLowerCase();
     };
 
+    const isSelected = index === selectedIndex;
+
     return (
       <div
         ref={ref}
         className={`group px-4 py-3 cursor-pointer transition-all duration-150 border-l-2 ${
-          index === selectedIndex
+          isSelected
             ? 'bg-[var(--accent)] border-l-[var(--primary)] border-l-4'
             : 'hover:bg-[var(--accent)] border-l-transparent'
         }`}
@@ -51,7 +45,7 @@ const ProblemItem = forwardRef<HTMLDivElement, ProblemItemProps>(
               </span>
             </div>
 
-            {/* Problem Details */}
+            {/* Problem Title */}
             <div className="flex-1 min-w-0">
               <div className="font-medium text-[var(--foreground)] text-sm mb-0.5 truncate">
                 {problem.title}

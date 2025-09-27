@@ -5,6 +5,7 @@ import Header from '@/components/Header';
 import SearchInput from '@/components/SearchInput';
 import ResultsList from '@/components/ResultsList';
 import Footer from '@/components/Footer';
+
 interface SearchResult extends LeetCodeProblem {
   matchType?: 'id' | 'title' | 'tag';
 }
@@ -24,9 +25,7 @@ function App() {
 
   // Focus input on mount
   useEffect(() => {
-    if (inputRef.current) {
-      inputRef.current.focus();
-    }
+    inputRef.current?.focus();
   }, []);
 
   // Load sync status on mount
@@ -37,7 +36,7 @@ function App() {
           type: 'CHECK_SYNC_STATUS',
         });
 
-        if (response.success) {
+        if (response?.success) {
           setSyncStatus({
             isStale: response.data.isStale,
             lastSync: response.data.lastSync ? new Date(response.data.lastSync) : null,
@@ -67,18 +66,16 @@ function App() {
         query: searchQuery,
       });
 
-      console.log('Search response:', response);
-
-      if (response && response.success) {
-        const enhancedResults = response.data.map((problem: LeetCodeProblem) => {
+      if (response?.success) {
+        const enhancedResults: SearchResult[] = response.data.map((problem: LeetCodeProblem) => {
           // Determine match type for better UX
           const lowerQuery = searchQuery.toLowerCase();
-          let matchType: 'id' | 'title' | 'tag' = 'title';
+          let matchType: 'id' | 'title' | 'slug' = 'title';
 
           if (problem.id.toString() === searchQuery) {
             matchType = 'id';
-          } else if (problem.topicTags.some(tag => tag.toLowerCase().includes(lowerQuery))) {
-            matchType = 'tag';
+          } else if (problem.slug.toLowerCase().includes(lowerQuery)) {
+            matchType = 'slug';
           }
 
           return { ...problem, matchType };
@@ -157,7 +154,7 @@ function App() {
         type: 'CHECK_SYNC_STATUS',
       });
 
-      if (response.success) {
+      if (response?.success) {
         setSyncStatus({
           isStale: response.data.isStale,
           lastSync: response.data.lastSync ? new Date(response.data.lastSync) : null,
