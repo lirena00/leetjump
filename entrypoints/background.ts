@@ -30,7 +30,7 @@ export default defineBackground(() => {
             type: 'basic',
             iconUrl: '/icon/48.png',
             title: 'LeetJump',
-            message: 'Setup complete! Press Alt+M to start searching.',
+            message: 'Setup complete! Press Alt+L to start searching.',
           });
         }
       } catch (error) {

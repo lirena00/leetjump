@@ -21,7 +21,7 @@ export default function Footer() {
         </div>
         <div className="flex items-center gap-1">
           <kbd className="px-1 py-0.5 bg-[var(--background)] border border-[var(--border)] rounded-[var(--radius-sm)] text-xs">
-            Alt+M
+            Alt+L
           </kbd>
           <span>Quick access</span>
         </div>

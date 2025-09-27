@@ -5,9 +5,9 @@ export default defineConfig({
   modules: ['@wxt-dev/module-react'],
   manifest: {
     name: 'LeetJump',
-    description: 'Quick LeetCode problem search with Alt+M - minimal, fast, and clean interface',
+    description: 'Quick LeetCode problem search with Alt+L - minimal, fast, and clean interface',
     version: '1.0.0',
-    permissions: ['storage', 'activeTab', 'tabs', 'notifications', 'alarms', 'commands'],
+    permissions: ['storage', 'notifications', 'alarms', 'commands'],
     host_permissions: ['<all_urls>'],
     commands: {
       _execute_action: {

@@ -61,7 +61,7 @@ bun run build
 2. Make your changes and test thoroughly:
 
    - Test in multiple browsers (Chrome, Firefox, Edge)
-   - Test keyboard shortcuts (Alt+M)
+   - Test keyboard shortcuts (Alt+L)
    - Test search functionality
    - Verify popup appearance and functionality
    - Test data syncing on first install
@@ -152,7 +152,7 @@ Before submitting a PR, please test:
 
 - [ ] Extension loads without errors in Chrome
 - [ ] Extension loads without errors in Firefox
-- [ ] Keyboard shortcut (Alt+M) opens popup
+- [ ] Keyboard shortcut (Alt+L) opens popup
 - [ ] Search functionality works correctly
 - [ ] Keyboard navigation (↑↓ arrows, Enter, Escape) works
 - [ ] Problems open correctly in new tabs

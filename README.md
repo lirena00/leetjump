@@ -99,7 +99,7 @@ bun run build           # Build for production
 1. **Background Script**: Fetches problems from LeetCode API on install and
    periodically
 2. **IndexedDB**: Stores 3000+ problems locally for instant access
-3. **Content Script**: Injects Shadow DOM popup on any website via Alt+M
+3. **Content Script**: Injects Shadow DOM popup on any website via Alt+L
 4. **Search Engine**: Real-time search across cached problems with fuzzy
    matching
 5. **Navigation**: Opens selected problems in new tabs via browser API
