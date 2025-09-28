@@ -9,41 +9,12 @@ export default defineBackground(() => {
       console.log('First time installation - syncing LeetCode problems...');
 
       try {
-        // Show notification that we're syncing
-        if (browser.notifications) {
-          browser.notifications.create({
-            type: 'basic',
-            iconUrl: '/icon/48.png',
-            title: 'LeetJump',
-            message: 'Syncing LeetCode problems... This may take a few minutes.',
-          });
-        }
-
         await leetcodeService.syncProblems((current, total) => {
           console.log(`Sync progress: ${current}/${total} problems`);
         });
-
         console.log('Initial sync completed successfully');
-
-        if (browser.notifications) {
-          browser.notifications.create({
-            type: 'basic',
-            iconUrl: '/icon/48.png',
-            title: 'LeetJump',
-            message: 'Setup complete! Press Alt+L to start searching.',
-          });
-        }
       } catch (error) {
         console.error('Failed to sync problems during installation:', error);
-
-        if (browser.notifications) {
-          browser.notifications.create({
-            type: 'basic',
-            iconUrl: '/icon/48.png',
-            title: 'LeetJump - Error',
-            message: 'Failed to sync problems. You can try again later from the extension popup.',
-          });
-        }
       }
     }
   });
