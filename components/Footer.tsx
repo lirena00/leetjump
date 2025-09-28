@@ -2,7 +2,11 @@ import { ChevronUp, ChevronDown, Heart } from 'lucide-react';
 import { Discord } from '@/components/icons/discord';
 import { Github } from '@/components/icons/github';
 import { Buymeacoffee } from '@/components/icons/buymeacoffee';
+
 export default function Footer() {
+  // Get version from manifest
+  const version = browser.runtime.getManifest().version;
+
   return (
     <div className="px-4 py-2 border-t border-[var(--border)] bg-[var(--muted)] flex-shrink-0">
       <div className="flex justify-between items-center text-xs text-[var(--muted-foreground)]">
@@ -19,11 +23,16 @@ export default function Footer() {
             <span>Open</span>
           </div>
         </div>
-        <div className="flex items-center gap-1">
-          <kbd className="px-1 py-0.5 bg-[var(--background)] border border-[var(--border)] rounded-[var(--radius-sm)] text-xs">
-            Alt+L
-          </kbd>
-          <span>Quick access</span>
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-1 opacity-75">
+            <span>v{version}</span>
+          </div>
+          <div className="flex items-center gap-1">
+            <kbd className="px-1 py-0.5 bg-[var(--background)] border border-[var(--border)] rounded-[var(--radius-sm)] text-xs">
+              Alt+L
+            </kbd>
+            <span>Quick access</span>
+          </div>
         </div>
       </div>
 

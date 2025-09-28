@@ -7,7 +7,11 @@ export default defineBackground(() => {
 
     if (details.reason === 'install') {
       console.log('First time installation - syncing LeetCode problems...');
-
+      browser.tabs.create({
+        url: `https://leetjump.lirena.in/thanks?utm_source=extension&utm_medium=install&browser=${
+          import.meta.env.BROWSER
+        }`,
+      });
       try {
         await leetcodeService.syncProblems((current, total) => {
           console.log(`Sync progress: ${current}/${total} problems`);
@@ -15,6 +19,16 @@ export default defineBackground(() => {
         console.log('Initial sync completed successfully');
       } catch (error) {
         console.error('Failed to sync problems during installation:', error);
+      }
+    } else if (details.reason === 'update') {
+      const previousVersion = details.previousVersion;
+      const currentVersion = browser.runtime.getManifest().version;
+      if (previousVersion !== currentVersion) {
+        browser.tabs.create({
+          url: `https://leetjump.lirena.in/release-notes/?utm_source=extension&utm_medium=update&browser=${
+            import.meta.env.BROWSER
+          }#v${currentVersion}`,
+        });
       }
     }
   });
