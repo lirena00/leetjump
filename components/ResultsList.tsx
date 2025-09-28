@@ -2,6 +2,8 @@ import { useEffect, useRef } from 'react';
 import { LeetCodeProblem } from '@/utils/database';
 import ProblemItem from './ProblemItem';
 import EmptyState from './EmptyState';
+import SlashCommandSuggestions from './SlashCommandSuggestions';
+import { SlashCommandSuggestion } from '@/utils/slash-commands';
 
 interface SearchResult extends LeetCodeProblem {
   matchType?: 'id' | 'title' | 'slug';
@@ -13,6 +15,8 @@ interface ResultsListProps {
   isLoading: boolean;
   selectedIndex: number;
   onOpenProblem: (problem: LeetCodeProblem) => void;
+  slashCommandSuggestions?: SlashCommandSuggestion[];
+  onSelectSlashCommand?: (command: string) => void;
 }
 
 export default function ResultsList({
@@ -21,46 +25,64 @@ export default function ResultsList({
   isLoading,
   selectedIndex,
   onOpenProblem,
+  slashCommandSuggestions = [],
+  onSelectSlashCommand,
 }: ResultsListProps) {
   const hasResults = results.length > 0;
-  const shouldShowEmpty = !hasResults && !isLoading;
+  const isSlashCommand = query.startsWith('/');
+  const shouldShowEmpty = !hasResults && !isLoading && !isSlashCommand;
+  const shouldShowSlashSuggestions = isSlashCommand && slashCommandSuggestions.length > 0;
+
+  // Check if we're in help mode
+  const isHelpMode =
+    query.toLowerCase().startsWith('/help') || query.toLowerCase().startsWith('/commands');
+
   const containerRef = useRef<HTMLDivElement>(null);
   const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   // Auto-scroll to selected item
   useEffect(() => {
-    if (hasResults && selectedIndex >= 0 && itemRefs.current[selectedIndex]) {
-      const selectedElement = itemRefs.current[selectedIndex];
+    if ((hasResults || shouldShowSlashSuggestions) && selectedIndex >= 0) {
+      const targetElement = itemRefs.current[selectedIndex];
       const container = containerRef.current;
 
-      if (selectedElement && container) {
+      if (targetElement && container) {
         const containerRect = container.getBoundingClientRect();
-        const elementRect = selectedElement.getBoundingClientRect();
+        const elementRect = targetElement.getBoundingClientRect();
 
-        // Check if element is outside the visible area
         const isAboveView = elementRect.top < containerRect.top;
         const isBelowView = elementRect.bottom > containerRect.bottom;
 
         if (isAboveView || isBelowView) {
-          selectedElement.scrollIntoView({
+          targetElement.scrollIntoView({
             behavior: 'smooth',
             block: 'nearest',
           });
         }
       }
     }
-  }, [selectedIndex, hasResults]);
+  }, [selectedIndex, hasResults, shouldShowSlashSuggestions]);
 
   // Reset refs when results change
   useEffect(() => {
-    itemRefs.current = itemRefs.current.slice(0, results.length);
-  }, [results.length]);
+    const itemCount = shouldShowSlashSuggestions ? slashCommandSuggestions.length : results.length;
+    itemRefs.current = itemRefs.current.slice(0, itemCount);
+  }, [results.length, slashCommandSuggestions.length, shouldShowSlashSuggestions]);
 
   return (
     <div ref={containerRef} className="flex-1 overflow-y-auto">
       {shouldShowEmpty && <EmptyState hasQuery={!!query} isLoading={isLoading} />}
 
-      {hasResults && (
+      {shouldShowSlashSuggestions && (
+        <SlashCommandSuggestions
+          suggestions={slashCommandSuggestions}
+          selectedIndex={selectedIndex}
+          onSelect={onSelectSlashCommand || (() => {})}
+          isHelpMode={isHelpMode}
+        />
+      )}
+
+      {hasResults && !isSlashCommand && (
         <div className="space-y-0">
           {results.map((problem, index) => (
             <ProblemItem
@@ -74,6 +96,13 @@ export default function ResultsList({
               onOpen={onOpenProblem}
             />
           ))}
+        </div>
+      )}
+
+      {isSlashCommand && slashCommandSuggestions.length === 0 && !isLoading && (
+        <div className="px-4 py-12 text-center">
+          <div className="text-sm font-medium text-[var(--foreground)] mb-1">No commands found</div>
+          <div className="text-xs text-[var(--muted-foreground)]">Try typing /potd or /help</div>
         </div>
       )}
     </div>

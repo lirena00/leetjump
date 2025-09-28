@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { LeetCodeProblem } from '@/utils/database';
+import { slashCommandService, SlashCommandSuggestion } from '@/utils/slash-commands';
 
 import Header from '@/components/Header';
 import SearchInput from '@/components/SearchInput';
@@ -7,7 +8,7 @@ import ResultsList from '@/components/ResultsList';
 import Footer from '@/components/Footer';
 
 interface SearchResult extends LeetCodeProblem {
-  matchType?: 'id' | 'title' | 'tag';
+  matchType?: 'id' | 'title' | 'slug';
 }
 
 function App() {
@@ -20,8 +21,50 @@ function App() {
     lastSync: Date | null;
     totalCount: number;
   } | null>(null);
+  const [slashCommandSuggestions, setSlashCommandSuggestions] = useState<SlashCommandSuggestion[]>(
+    []
+  );
 
   const inputRef = useRef<HTMLInputElement>(null);
+
+  // Initialize slash commands
+  useEffect(() => {
+    // Register POTD command
+    slashCommandService.registerCommand({
+      id: 'potd',
+      aliases: ['potd', 'today', 'daily'],
+      description: "Open today's Problem of the Day",
+      execute: async () => {
+        setIsLoading(true);
+        try {
+          const response = await browser.runtime.sendMessage({
+            type: 'OPEN_DAILY_PROBLEM',
+          });
+
+          if (response?.success) {
+            setQuery('');
+          } else {
+            console.error('Failed to open daily problem:', response?.error);
+          }
+        } catch (error) {
+          console.error('Failed to execute POTD command:', error);
+        } finally {
+          setIsLoading(false);
+        }
+      },
+    });
+
+    // Register help command
+    slashCommandService.registerCommand({
+      id: 'help',
+      aliases: ['help', 'commands'],
+      description: 'Show all available slash commands',
+      execute: async () => {
+        const suggestions = slashCommandService.getSuggestions('/help');
+        setSlashCommandSuggestions(suggestions);
+      },
+    });
+  }, []);
 
   // Focus input on mount
   useEffect(() => {
@@ -51,9 +94,25 @@ function App() {
     loadSyncStatus();
   }, []);
 
+  // Handle query changes
+  const handleQueryChange = useCallback((newQuery: string) => {
+    setQuery(newQuery);
+    setSelectedIndex(0);
+
+    if (newQuery.startsWith('/')) {
+      // Handle slash commands
+      const suggestions = slashCommandService.getSuggestions(newQuery);
+      setSlashCommandSuggestions(suggestions);
+      setResults([]);
+    } else {
+      // Clear slash command suggestions for regular search
+      setSlashCommandSuggestions([]);
+    }
+  }, []);
+
   // Search function with debouncing
   const performSearch = useCallback(async (searchQuery: string) => {
-    if (!searchQuery.trim()) {
+    if (!searchQuery.trim() || searchQuery.startsWith('/')) {
       setResults([]);
       return;
     }
@@ -68,7 +127,6 @@ function App() {
 
       if (response?.success) {
         const enhancedResults: SearchResult[] = response.data.map((problem: LeetCodeProblem) => {
-          // Determine match type for better UX
           const lowerQuery = searchQuery.toLowerCase();
           let matchType: 'id' | 'title' | 'slug' = 'title';
 
@@ -97,20 +155,32 @@ function App() {
 
   // Debounced search effect
   useEffect(() => {
-    const timer = setTimeout(() => {
-      performSearch(query);
-    }, 150);
+    if (!query.startsWith('/')) {
+      const timer = setTimeout(() => {
+        performSearch(query);
+      }, 150);
 
-    return () => clearTimeout(timer);
+      return () => clearTimeout(timer);
+    }
   }, [query, performSearch]);
+
+  // Handle slash command selection
+  const handleSlashCommandSelect = useCallback((command: string) => {
+    setQuery(command);
+    const suggestions = slashCommandService.getSuggestions(command);
+    setSlashCommandSuggestions(suggestions);
+  }, []);
 
   // Handle keyboard navigation
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent) => {
+      const isSlashMode = query.startsWith('/');
+      const maxIndex = isSlashMode ? slashCommandSuggestions.length - 1 : results.length - 1;
+
       switch (e.key) {
         case 'ArrowDown':
           e.preventDefault();
-          setSelectedIndex(prev => Math.min(prev + 1, results.length - 1));
+          setSelectedIndex(prev => Math.min(prev + 1, maxIndex));
           break;
 
         case 'ArrowUp':
@@ -120,13 +190,33 @@ function App() {
 
         case 'Enter':
           e.preventDefault();
-          if (results[selectedIndex]) {
+          if (isSlashMode && slashCommandSuggestions[selectedIndex]) {
+            const suggestion = slashCommandSuggestions[selectedIndex];
+
+            // Special handling for help command - don't execute, just show suggestions
+            if (suggestion.command.id === 'help') {
+              setQuery('/help');
+              const helpSuggestions = slashCommandService.getSuggestions('/help');
+              setSlashCommandSuggestions(helpSuggestions);
+            } else {
+              // Execute other commands
+              suggestion.command.execute();
+            }
+          } else if (!isSlashMode && results[selectedIndex]) {
+            // Open selected problem
             openProblem(results[selectedIndex]);
           }
           break;
+
+        case 'Escape':
+          e.preventDefault();
+          setQuery('');
+          setResults([]);
+          setSlashCommandSuggestions([]);
+          break;
       }
     },
-    [results, selectedIndex]
+    [results, selectedIndex, query, slashCommandSuggestions]
   );
 
   // Open problem in new tab
@@ -149,7 +239,6 @@ function App() {
         type: 'SYNC_PROBLEMS',
       });
 
-      // Refresh sync status
       const response = await browser.runtime.sendMessage({
         type: 'CHECK_SYNC_STATUS',
       });
@@ -176,7 +265,7 @@ function App() {
         query={query}
         isLoading={isLoading}
         inputRef={inputRef}
-        onQueryChange={setQuery}
+        onQueryChange={handleQueryChange}
         onKeyDown={handleKeyDown}
       />
 
@@ -186,6 +275,8 @@ function App() {
         isLoading={isLoading}
         selectedIndex={selectedIndex}
         onOpenProblem={openProblem}
+        slashCommandSuggestions={slashCommandSuggestions}
+        onSelectSlashCommand={handleSlashCommandSelect}
       />
 
       <Footer />

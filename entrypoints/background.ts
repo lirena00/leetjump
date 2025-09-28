@@ -80,7 +80,7 @@ export default defineBackground(() => {
           case 'OPEN_PROBLEM':
             // Open the problem in a new tab
             await browser.tabs.create({
-              url: leetcodeService.getProblemUrl(message.slug),
+              url: leetcodeService.getProblemUrl(message.slug, message.envType, message.envId),
               active: true,
             });
             response = { success: true };
@@ -101,6 +101,35 @@ export default defineBackground(() => {
             };
             break;
 
+          case 'GET_DAILY_PROBLEM':
+            const dailyProblem = await leetcodeService.getDailyProblem();
+            response = { success: true, data: dailyProblem };
+            break;
+
+          case 'OPEN_DAILY_PROBLEM':
+            try {
+              const dailyProblem = await leetcodeService.getDailyProblem();
+              const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD format
+
+              if (dailyProblem) {
+                await browser.tabs.create({
+                  url: leetcodeService.getProblemUrl(dailyProblem.slug, 'daily-question', today),
+                  active: true,
+                });
+                response = { success: true, data: dailyProblem };
+              } else {
+                // Fallback to general daily problem page
+                await browser.tabs.create({
+                  url: leetcodeService.getDailyProblemUrl(today),
+                  active: true,
+                });
+                response = { success: true, data: null };
+              }
+            } catch (error) {
+              console.error('Failed to open daily problem:', error);
+              response = { success: false, error: 'Failed to open daily problem' };
+            }
+            break;
           default:
             console.warn('Unknown message type:', message.type);
             response = { success: false, error: 'Unknown message type' };

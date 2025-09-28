@@ -29,7 +29,74 @@ export interface LeetCodeApiResponse {
 
 class LeetCodeService {
   private readonly API_ENDPOINT = 'https://leetcode.com/api/problems/all/';
+  private readonly DAILY_ENDPOINT = 'https://leetcode.com/graphql';
   private readonly CACHE_DURATION = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
+
+  async getDailyProblem(): Promise<{ slug: string; title: string; difficulty: string } | null> {
+    try {
+      const query = `
+        query questionOfToday {
+          activeDailyCodingChallengeQuestion {
+            date
+            userStatus
+            link
+            question {
+              acRate
+              difficulty
+              freqBar
+              frontendQuestionId: questionFrontendId
+              isFavor
+              paidOnly: isPaidOnly
+              status
+              title
+              titleSlug
+              hasVideoSolution
+              hasSolution
+              topicTags {
+                name
+                id
+                slug
+              }
+            }
+          }
+        }
+      `;
+      const response = await fetch(this.DAILY_ENDPOINT, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ query }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
+
+      const data = await response.json();
+      const dailyQuestion = data.data?.activeDailyCodingChallengeQuestion?.question;
+
+      if (dailyQuestion) {
+        return {
+          slug: dailyQuestion.titleSlug,
+          title: dailyQuestion.title,
+          difficulty: dailyQuestion.difficulty,
+        };
+      }
+
+      return null;
+    } catch (error) {
+      console.error('Failed to fetch daily problem:', error);
+      return null;
+    }
+  }
+
+  getDailyProblemUrl(envId?: string): string {
+    if (envId) {
+      return `https://leetcode.com/problems/?envType=daily-question&envId=${envId}`;
+    }
+    return 'https://leetcode.com/problemset/all/?listId=wpwgkgt';
+  }
 
   private async fetchProblemsWithFallback(): Promise<LeetCodeProblem[]> {
     // Try the official API first, then fall back to sample data for development
@@ -155,10 +222,15 @@ class LeetCodeService {
     return leetcodeDB.searchProblems(query);
   }
 
-  getProblemUrl(slug: string): string {
-    return `https://leetcode.com/problems/${slug}/`;
-  }
+  getProblemUrl(slug: string, envType?: string, envId?: string): string {
+    let url = `https://leetcode.com/problems/${slug}/`;
 
+    if (envType && envId) {
+      url += `?envType=${envType}&envId=${envId}`;
+    }
+
+    return url;
+  }
   async isDataStale(): Promise<boolean> {
     const metadata = await leetcodeDB.getMetadata();
     if (!metadata) return true;

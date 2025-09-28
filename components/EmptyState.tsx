@@ -21,7 +21,7 @@ export default function EmptyState({ hasQuery, isLoading }: EmptyStateProps) {
         <div className="text-sm font-medium text-[var(--foreground)] mb-2">
           Ready to search problems
         </div>
-        <div className="text-xs text-[var(--muted-foreground)] space-y-1">
+        <div className="text-xs text-[var(--muted-foreground)] space-y-2">
           <div>
             Try:{' '}
             <code className="bg-[var(--muted)] px-1.5 py-0.5 rounded-[var(--radius-md)] text-xs">
@@ -31,6 +31,15 @@ export default function EmptyState({ hasQuery, isLoading }: EmptyStateProps) {
             <code className="bg-[var(--muted)] px-1.5 py-0.5 rounded-[var(--radius-md)] text-xs">
               "1"
             </code>
+          </div>
+          <div className="pt-2 border-t border-[var(--border)]">
+            <div className="text-xs font-medium text-[var(--chart-4)] mb-1">⚡ Slash Commands</div>
+            <div>
+              <code className="bg-[var(--chart-4)]/10 text-[var(--chart-4)] px-1.5 py-0.5 rounded-[var(--radius-md)] text-xs">
+                /potd
+              </code>{' '}
+              - Problem of the Day
+            </div>
           </div>
         </div>
       </div>
